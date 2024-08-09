@@ -1,10 +1,16 @@
 {
   "name": "calculator-utils",
   "version": "1.1.4",
-  "main": "index.js",
+  "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
   },
   "keywords": [],
   "author": "leesul",
@@ -13,5 +19,9 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/helloleesul/calculator-utils.git"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.0",
+    "typescript": "^5.5.4"
   }
 }
