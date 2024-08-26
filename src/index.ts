@@ -1,13 +1,13 @@
 import {getErrorMessage} from "./error.js";
 import {applyOperator, OperatorType} from "./applyOperator.js";
 
-export function calculate(value: string) {
+export function calculate(value: string):string {
   // 연산자 종류와 함수 할당
   const operators:string[] = ["+", "-", "*", "/"];
 
   // 숫자와 연산자 구분하여 배열로 반환
   let tokenValue = value.match(/(\d+\.?\d*|\+|\-|\*|\/)/g);
-  if (!tokenValue) return getErrorMessage('emptyArgument')
+  if (!tokenValue) getErrorMessage('emptyArgument')
 
   // 숫자 스택
   let numberStack: number[] = [];
@@ -19,12 +19,12 @@ export function calculate(value: string) {
     return operators.includes(value);
   }
 
+  if(tokenValue)
   // 해당하는 스택에 보내거나 중간 계산하기
   tokenValue.forEach((token) => {
       // 숫자
       if (!isOperatorType(token)) {
-        numberStack.push(parseFloat(token));
-        return;
+        return numberStack.push(parseFloat(token));
       }
       // 연산자
       if (operatorStack.length) {
