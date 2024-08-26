@@ -2,8 +2,9 @@ import {getErrorMessage} from "./error.js";
 import {add, divide, multiply, subtract} from "./operations.js";
 
 export type OperatorType = "+" | "-" | "*" | "/";
+type OperatorFunction = (a: number, b: number) => number;
 
-const operatorFunctions = {
+const operatorFunctions: Record<OperatorType, OperatorFunction> = {
     "+": add,
     "-": subtract,
     "*": multiply,
@@ -16,16 +17,9 @@ export function applyOperator(numberStack:number[], operatorStack:OperatorType[]
     const right = numberStack.pop();
     const left = numberStack.pop();
 
-    if (operator !== undefined) {
-        if (
-            isNaN(
-                operatorFunctions[operator](Number(left), Number(right))
-            )
-        ) {
-            getErrorMessage('resultIsNan')
-        }
-        numberStack.push(
-            operatorFunctions[operator](Number(left), Number(right))
-        );
-    }
+    if (operator === undefined || right === undefined || left === undefined) return getErrorMessage('resultIsNan');
+
+    const result = operatorFunctions[operator](left, right);
+    if (Number.isNaN(result)) getErrorMessage('resultIsNan');
+    numberStack.push(result);
 }
