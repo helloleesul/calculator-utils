@@ -1,15 +1,24 @@
 {
   "name": "calculator-utils",
-  "version": "1.2.1",
-  "main": "dist/index.js",
+  "version": "1.2.0",
+  "main": "./cjs/index.js",
+  "module": "./esm/index.js",
   "type": "module",
   "scripts": {
-    "build": "tsc"
+    "build": "npm run build:cjs & npm run build:esm",
+    "build:cjs": "tsc --p ./cjs/tsconfig.json",
+    "build:esm": "tsc --p ./esm/tsconfig.json"
   },
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "require": {
+        "default": "./cjs/index.js",
+        "types": "./cjs/index.d.ts"
+      },
+      "import": {
+        "default": "./esm/index.js",
+        "types": "./esm/index.d.ts"
+      }
     }
   },
   "keywords": [],
