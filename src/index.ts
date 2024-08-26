@@ -1,47 +1,18 @@
-import { add, subtract, multiply, divide } from "./operations.js";
-
-type Operator = "+" | "-" | "*" | "/";
+import {getErrorMessage} from "./error.js";
+import {applyOperator, OperatorType} from "./applyOperator.js";
 
 export function calculate(value: string) {
   // 연산자 종류와 함수 할당
-  const operators = ["+", "-", "*", "/"];
-  const operatorFunctions = {
-    "+": add,
-    "-": subtract,
-    "*": multiply,
-    "/": divide,
-  };
+  const operators:string[] = ["+", "-", "*", "/"];
 
   // 숫자와 연산자 구분하여 배열로 반환
   let tokenValue = value.match(/(\d+\.?\d*|\+|\-|\*|\/)/g);
-  if (!tokenValue) return "계산할 값을 입력해 주세요.";
+  if (!tokenValue) return getErrorMessage('emptyArgument')
 
   // 숫자 스택
-  let numberStack: (number | string)[] = [];
+  let numberStack: number[] = [];
   // 연산자 스택
-  let operatorStack: string[] = [];
-
-  // 계산 함수
-  const applyOperator = () => {
-    const operator = operatorStack.pop();
-    const right = numberStack.pop();
-    const left = numberStack.pop();
-    try {
-      if (operator !== undefined) {
-        if (
-          isNaN(
-            operatorFunctions[operator as Operator](Number(left), Number(right))
-          )
-        )
-          throw new Error("올바르지 않은 계산입니다.");
-        numberStack.push(
-          operatorFunctions[operator as Operator](Number(left), Number(right))
-        );
-      }
-    } catch (error) {
-      if (error instanceof Error) numberStack.push(error.message);
-    }
-  };
+  let operatorStack: OperatorType[] & string[]  = [];
 
   // 해당하는 스택에 보내거나 중간 계산하기
   tokenValue.forEach((token) => {
@@ -53,7 +24,7 @@ export function calculate(value: string) {
       // 연산자일 때
       if (operatorStack.length) {
         // 중간 연산자의 계산
-        applyOperator();
+        applyOperator(numberStack, operatorStack);
       }
       // 연산자 스택에 추가
       operatorStack.push(token);
@@ -62,7 +33,7 @@ export function calculate(value: string) {
 
   if (operatorStack.length) {
     // 마지막 연산자의 계산
-    applyOperator();
+    applyOperator(numberStack, operatorStack);
   }
 
   // 총 계산 결과값
