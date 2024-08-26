@@ -12,23 +12,27 @@ export function calculate(value: string) {
   // 숫자 스택
   let numberStack: number[] = [];
   // 연산자 스택
-  let operatorStack: OperatorType[] & string[]  = [];
+  let operatorStack: OperatorType[]   = [];
+
+  // 타입 가드 함수 정의
+  function isOperatorType(value: string): value is OperatorType {
+    return operators.includes(value);
+  }
 
   // 해당하는 스택에 보내거나 중간 계산하기
   tokenValue.forEach((token) => {
-    // 숫자일 때
-    if (!isNaN(Number(token))) {
-      // 숫자 스택에 추가
-      numberStack.push(parseFloat(token));
-    } else if (operators.includes(token)) {
-      // 연산자일 때
+      // 숫자
+      if (!isOperatorType(token)) {
+        numberStack.push(parseFloat(token));
+        return;
+      }
+      // 연산자
       if (operatorStack.length) {
         // 중간 연산자의 계산
         applyOperator(numberStack, operatorStack);
       }
       // 연산자 스택에 추가
       operatorStack.push(token);
-    }
   });
 
   if (operatorStack.length) {
